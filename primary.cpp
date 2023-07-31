@@ -1,12 +1,7 @@
-
-
-
 #include <stdio.h>
-
-
 int main()
 {
-    int speed = 0, numLines = 0, layers = 0; 
+    int speed = 0, gapSpeed = 0, numLines = 0, layers = 0; 
     
     float poreSize = 0, z = 0, zFactor = 0.2, e = 0, eFactor = 0.002;   
     printf(";Enter pore size: "); 
@@ -14,7 +9,9 @@ int main()
     printf("\n;Enter numLines:  "); 
     scanf("%d", &numLines); 
     printf("\n;Enter print speed:  "); 
-    scanf("%d", &speed); 
+    scanf("%d", &speed);  
+     printf("\n;Enter gap speed:  "); 
+    scanf("%d", &gapSpeed);  
     printf("\n;Enter num layers:  "); 
     scanf("%d", &layers); 
     
@@ -34,7 +31,7 @@ int main()
     for(int l = 1; l <= layers; l++){
     printf(";LAYER:%d\n", l-1); 
     printf("M107\n");  
-    printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, 0.00, 0.00, z+= 0.2); 
+    printf("G0 F%d X%.2f Y%.2f Z%f\n", gapSpeed, 0.00, 0.00, z+= 0.2); 
     printf("TYPE:WALL-OUTER\n"); 
     
     if(l == 1 || (l - 1) % 4 ==  0) {
@@ -45,12 +42,12 @@ int main()
 
             } 
             else if(i % 2 == 0){
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)), (poreSize * numLines),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)), (poreSize * numLines),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)), 0.00,  e += eFactor); 
 
             }
             else {
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)), 0.00,  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)), 0.00,  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)), (poreSize * numLines),  e += eFactor);  
             }
         }  
@@ -63,13 +60,13 @@ int main()
 
             } 
             else if(i % 2 == 0){
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)),  e += eFactor); 
 
             printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)),  e += eFactor); 
 
             }
             else {
-            printf("G0 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)),  e += eFactor); 
  
             }
@@ -85,23 +82,23 @@ int main()
          
             else if(i % 2 == 0){
             if(i == numLines+2){
-             printf("G0 X%.2f Y%.2f E%f\n", (poreSize * (i - 2)), (poreSize * numLines),  e += eFactor); 
+             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 2)), (poreSize * numLines),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 2)), 0.00,  e += eFactor); 
                 
             }
             else{           
           
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)) - (poreSize/2), (poreSize * numLines),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)) - (poreSize/2), (poreSize * numLines),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)) - (poreSize/2), 0.00,  e += eFactor); 
             }
             }
             else { 
             if(i == numLines+2){
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * (i - 2)), 0.00,  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 2)), 0.00,  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 2)), (poreSize * numLines),  e += eFactor);     
             } 
             else {
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)) - (poreSize/2), 0.00,  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)) - (poreSize/2), 0.00,  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * (i - 1)) - (poreSize/2), (poreSize * numLines),  e += eFactor);  
             }
                 
@@ -117,22 +114,22 @@ int main()
             } 
             else if(i % 2 == 0){
             if(i == numLines + 2){ 
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 2)),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 2)),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 2)),  e += eFactor);  
             }
             else { 
-            printf("G0 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
             }
             }
             else {
             if(i == numLines + 2){
-            printf("G0 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 2)) ,  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 2)) ,  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 2)) ,  e += eFactor); 
             }
             
             
-            printf("G0 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
+            printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
  
             }
