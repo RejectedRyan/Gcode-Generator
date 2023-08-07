@@ -127,11 +127,11 @@ int main()
             printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 2)) ,  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 2)) ,  e += eFactor); 
             }
-            
+            else{
             
             printf("G1 X%.2f Y%.2f E%f\n", 0.00, (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
             printf("G1 X%.2f Y%.2f E%f\n", (poreSize * numLines), (poreSize * (i - 1)) - (poreSize / 2),  e += eFactor); 
- 
+            }
             }
         }   
     }
