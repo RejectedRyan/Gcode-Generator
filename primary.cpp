@@ -127,5 +127,5 @@ int main()
     printf("G92 E0\n");
     printf("M84\n");
     printf("M82\n");
-    return 0
+    return 0;
 }
