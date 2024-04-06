@@ -122,7 +122,7 @@ int main()
                 }
             }   
         }
-        e = 0; 
+        
     } 
     printf("G92 E0\n");
     printf("M84\n");
