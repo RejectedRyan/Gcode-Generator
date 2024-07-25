@@ -10,8 +10,6 @@ int main()
     scanf("%d", &numLines); 
     printf("\n;Enter print speed (mm/s * 60):  "); 
     scanf("%d", &speed);  
-    printf("\n;Enter gap speed (mm/s * 60) :  "); 
-    scanf("%d", &gapSpeed);  
     printf("\n;Enter num layers:  "); 
     scanf("%d", &layers); 
     
@@ -31,7 +29,7 @@ int main()
     for(int l = 1; l <= layers; l++){
         printf(";LAYER:%d\n", l-1); 
         printf("M107\n");  
-        printf("G0 F%d X%.2f Y%.2f Z%f\n", gapSpeed, 0.00, 0.00, z+= zFactor); 
+        printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, 0.00, 0.00, z+= zFactor); 
         printf("TYPE:WALL-OUTER\n"); 
     
         if(l == 1 || (l - 1) % 4 ==  0) {
