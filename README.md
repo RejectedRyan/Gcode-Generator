@@ -1,7 +1,7 @@
 # Gcode-Generator
 
 
-image.png 
+![examplephoto](assets/image.png)
 
 Generates gcode for scaffold printing with allevi.  
 
