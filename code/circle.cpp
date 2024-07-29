@@ -1,7 +1,10 @@
 #include <math.h>
 #include <stdio.h>
+#include "func.h"
 int main()
 {
+    using namespace std; 
+    
     int speed = 0, gapSpeed = 0, layers = 0, numPoints = 40; 
     
     float radius = 0, z = 0, zFactor = 0.2, e = 0, eFactor = 0.002, x = 0;   
@@ -31,35 +34,38 @@ int main()
         printf("G0 F%d X%.2f Y%.2f Z%f\n", gapSpeed, 0.00, 0.00, z+= 0.2); 
         printf("TYPE:WALL-OUTER\n");  
         printf("G0 F%d X%.2f Y%.2f\n", speed, 0.00, radius);
-        for(int qt = 1; qt <= 4; qt++){
-            switch(qt){
-                case 1: 
-                for(int ct = 0; ct < numPoints; ct++){
-                    x = (radius / numPoints) * (ct + 1); 
-                    printf("G1 X%.2f Y%.2f E%f\n", x, sqrt(pow(radius, 2) - pow(x, 2)),  e += eFactor); 
-                } 
-                break; 
-                case 2: 
-                for(int ct = 0; ct < numPoints; ct++){
-                    x = (radius / numPoints) * (numPoints - (ct + 1)); 
-                    printf("G1 X%.2f Y%.2f E%f\n", x, -(sqrt(pow(radius, 2) - pow(x, 2))),  e += eFactor); 
-                } 
-                break; 
-                case 3: 
-                for(int ct = 0; ct < numPoints; ct++){
-                    x = (radius / numPoints) * (ct + 1); 
-                    printf("G1 X%.2f Y%.2f E%f\n", -x, -(sqrt(pow(radius, 2) - pow(x, 2))),  e += eFactor); 
-                } 
-                break; 
-                case 4:
-                for(int ct = 0; ct < numPoints; ct++){
-                    x = (radius / numPoints) * (numPoints - (ct +1)); 
-                    printf("G1 X%.2f Y%.2f E%f\n", -x, sqrt(pow(radius, 2) - pow(x, 2)),  e += eFactor); 
-                } 
-                break; 
-           
-            }
-        }
+     for(int qt = 1; qt <= 4; qt++) {
+			switch(qt) {
+			case 1:
+				for(int ct = 0; ct < numPoints; ct++) {
+					x = (radius / numPoints) * (ct + 1);
+					printLine(x, circlePoint(true, x, radius), e+=eFactor);
+
+				}
+				break;
+			case 2:
+				for(int ct = 0; ct < numPoints; ct++) {
+					x = (radius / numPoints) * (numPoints - (ct + 1));
+					printLine(x, circlePoint(false, x, radius), e+=eFactor);
+				}
+				break;
+			case 3:
+				for(int ct = 0; ct < numPoints; ct++) {
+					x = (radius / numPoints) * (ct + 1);
+					printLine(-x, circlePoint(false, -x, radius), e+=eFactor);
+
+				}
+				break;
+			case 4:
+				for(int ct = 0; ct < numPoints; ct++) {
+					x = (radius / numPoints) * (numPoints - (ct +1));
+					printLine(-x, circlePoint(true, -x, radius), e+=eFactor);
+
+				}
+				break;
+
+			}
+		}
         
      }
     printf("G92 E0\n");
