@@ -2,16 +2,32 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "func.h"
-//includes circlePoint(tophalf, point, rad) and printLine(x, y, e)
+//returns cartisian point based on one variable
+float circlePoint(bool topHalf, float point, float rad) {
 
+	if(topHalf)
 
+		return sqrt(pow(rad, 2) - pow(point, 2));
+
+	else
+
+		return -sqrt(pow(rad, 2) - pow(point, 2));
+
+}
+
+//prints gcode line based on x y position 
+void printLine(float X, float Y, float E) {
+
+	printf("G1 X%.2f Y%.2f E%f\n", X, Y, E);
+
+	return;
+}
 
 int main()
 {
 	int speed = 0, gapSpeed = 0, layers = 0, numPoints = 11, numLines;
 
-	float radius = 0, poreSize,z = 0, zFactor = 0.2, e = 0, eFactor = 0.002, x = 0;
+	float radius = 0, poreSize,z = 0, zFactor = 0.2, e = 0, eFactor = 0.002, pt = 0, offset = 0;
 	printf(";Enter pore size: ");
 	scanf("%f", &poreSize);
 	printf("\n;Enter number of lines: ");
@@ -35,32 +51,94 @@ int main()
 	printf(";LAYER_COUNT:%d\n", layers);
 	for(int l = 1; l <= layers; l++) {
 
-		x = -radius + poreSize;
+		pt = -radius + poreSize;
+		offset = (poreSize / 2);
 
 		printf(";LAYER:%d\n", l-1);
 		printf("M107\n");
-		printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, 0.00, 0.00, z+= 0.2);
-		printf("TYPE:WALL-OUTER\n");
-		printf("G0 F%d X%.2f Y%.2f\n", speed, x, circlePoint(false, x, radius));
 
-		for(int ct = 0; ct < numLines; ct++ ) {
-			if(ct % 2 == 0) {
-				printLine(x, circlePoint(true, x, radius), e+=eFactor);  //line
-				x+=poreSize;
-				printLine(x, circlePoint(true, x, radius), e+=eFactor);  //gap? whatever its called
+
+		if(l == 1 || (l - 1) % 4 ==  0) {
+			printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, pt, circlePoint(false, pt, radius), z+= 0.2);
+			printf("TYPE:WALL-OUTER\n");
+
+			for(int ct = 0; ct < numLines; ct++ ) {
+				if(ct % 2 == 0) {
+					printLine(pt, circlePoint(true, pt, radius), e+=eFactor);  //line
+					pt+=poreSize;
+					printLine(pt, circlePoint(true, pt, radius), e+=eFactor);  //gap? whatever its called
+				}
+				else {
+					printLine(pt, circlePoint(false, pt, radius), e+=eFactor);
+					pt+=poreSize;
+					printLine(pt, circlePoint(false, pt, radius), e+=eFactor);
+				}
+			} 
+							printLine(pt, circlePoint(true, pt, radius), e+=eFactor);
+
+		}
+		else if(l % 2 == 0 && l % 4 != 0) {
+			printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, circlePoint(false, pt, radius), pt,z+= 0.2);
+			printf("TYPE:WALL-OUTER\n");
+			for(int ct = 0; ct < numLines; ct++ ) {
+				if(ct % 2 == 0) {
+					printLine(circlePoint(true, pt, radius), pt, e+=eFactor);  //line
+					pt+=poreSize;
+					printLine(circlePoint(true, pt, radius), pt, e+=eFactor);  //gap? whatever its called
+				}
+				else {
+					printLine(circlePoint(false, pt, radius), pt, e+=eFactor);
+					pt+=poreSize;
+					printLine(circlePoint(false, pt, radius), pt, e+=eFactor);
+				}
 			}
-			else {
-				printLine(x, circlePoint(false, x, radius), e+=eFactor);
-				x+=poreSize;
-				printLine(x, circlePoint(false, x, radius), e+=eFactor);
+				printLine(circlePoint(true, pt, radius), pt, e+=eFactor);
+
+		}
+		else if((l - 1) % 2 == 0) {
+			pt = pt - offset;
+			printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, pt, circlePoint(false, pt, radius), z+= 0.2);
+			printf("TYPE:WALL-OUTER\n");
+
+			for(int ct = 0; ct < numLines+1; ct++ ) {
+				if(ct % 2 == 0) {
+					printLine(pt, circlePoint(true, pt, radius), e+=eFactor);  //line
+					pt+=poreSize;
+					printLine(pt, circlePoint(true, pt, radius), e+=eFactor);  //gap? whatever its called
+				}
+				else {
+					printLine(pt, circlePoint(false, pt, radius), e+=eFactor);
+					pt+=poreSize;
+					printLine(pt, circlePoint(false, pt, radius), e+=eFactor);
+				}
 			}
-			printLine(x, circlePoint(true, x, radius), e+=eFactor);
-		} 
+				printLine(pt, circlePoint(false, pt, radius), e+=eFactor);
+
+		}
+		else  {
+
+			pt = pt - offset;
+			printf("G0 F%d X%.2f Y%.2f Z%f\n", speed, circlePoint(false, pt, radius), pt,z+= 0.2);
+			printf("TYPE:WALL-OUTER\n");
+			for(int ct = 0; ct < numLines+1; ct++ ) {
+				if(ct % 2 == 0) {
+					printLine(circlePoint(true, pt, radius), pt, e+=eFactor);  //line
+					pt+=poreSize;
+					printLine(circlePoint(true, pt, radius), pt, e+=eFactor);  //gap? whatever its called
+				}
+				else {
+					printLine(circlePoint(false, pt, radius), pt, e+=eFactor);
+					pt+=poreSize;
+					printLine(circlePoint(false, pt, radius), pt, e+=eFactor);
+				}
+			}
+				printLine(circlePoint(false, pt, radius), pt, e+=eFactor);
+
+		}
 	
-
 	}
-	printf("G92 E0\n");
-	printf("M84\n");
-	printf("M82\n");
-	return 0;
+		printf("G92 E0\n");
+		printf("M84\n");
+		printf("M82\n");
+		return 0;
 }
